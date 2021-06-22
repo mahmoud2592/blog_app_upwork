@@ -37,34 +37,34 @@ services:
       DB_PASSWORD: password
       DB_HOST: db
 
-  # sidekiq:
-  #   build: .
-  #   command: bundle exec sidekiq
-  #   depends_on:
-  #     - redis
-  #   volumes:
-  #     - .:/blog_app
-  #   env_file:
-  #     - .env
-
   sidekiq:
+    build: .
+    command: bundle exec sidekiq
     depends_on:
-        - "db"
-        - "redis"
-    build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
-    command: sidekiq -C ./config/sidekiq.yml
+      - redis
     volumes:
-        - "../.:/app"
-    environment:
-      REDIS_URL: redis://redis:6379
-      DB_USERNAME: root
-      DB_PASSWORD: root
-      DB_PORT: 5432
-      DB_HOST: db
-      RAILS_ENV: development
-      RAILS_MAX_THREADS: 5
+      - .:/blog_app
+    env_file:
+      - .env
+
+  # sidekiq:
+  #   depends_on:
+  #     - "db"
+  #     - "redis"
+  #   build:
+  #     context: ..
+  #     dockerfile: ./docker/Dockerfile
+  #   command: sidekiq -C ./config/sidekiq.yml
+  #   volumes:
+  #       - "../.:/app"
+  #   environment:
+  #     REDIS_URL: redis://redis:6379
+  #     DB_USERNAME: root
+  #     DB_PASSWORD: root
+  #     DB_PORT: 5432
+  #     DB_HOST: db
+  #     RAILS_ENV: development
+  #     RAILS_MAX_THREADS: 5
 
 
 volumes:
